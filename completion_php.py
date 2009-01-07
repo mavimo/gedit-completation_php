@@ -155,9 +155,12 @@ class CompletionPHPPlugin(gedit.Plugin):
     _re_non_alpha = re.compile(r"\W+", re.UNICODE | re.MULTILINE)
 
     # TODO: Are these sane defaults? Do we need a configuration dialog?
-    _max_completions_to_show = 10   # Number of autocomplete terma viable into popup
-    _function_definition_file = "./phpfunc.txt" # File fith function autocomplete list
-    _min_word_length = 3    # Min length of word before popup appair
+    # Number of autocomplete terma viable into popup
+    _max_completions_to_show = 10
+    # File fith function autocomplete list
+    _function_definition_file = "./phpfunc.txt"
+    # Min length of word before popup appair
+    _min_word_length = 3
 
     def __init__(self):
         gedit.Plugin.__init__(self) # Init this plugin
@@ -174,11 +177,11 @@ class CompletionPHPPlugin(gedit.Plugin):
         window = gedit.app_get_default().get_active_window()
         # Load current document
         doc = window.get_active_document()
-        # Index of completation windows
+        # Index of completion windows
         index = self._completion_windows[window].get_selected()
         # Insert into documente (at cursor position), selected text
         doc.insert_at_cursor(self._remains[index])
-        # terminate completation
+        # terminate completion
         self._terminate_completion()
 
     def _connect_document(self, doc):
@@ -259,11 +262,9 @@ class CompletionPHPPlugin(gedit.Plugin):
             return self._terminate_completion()
         # TAB
         if (event.keyval == gtk.keysyms.Tab) and self._remains:
-#            self._terminate_completion()
             return not self._complete_current()
         # RETURN
         if (event.keyval == gtk.keysyms.Return) and self._remains:
-#            self._terminate_completion()
             return not self._complete_current()
         completion_window = self._completion_windows[window]
         # UP Arrow
