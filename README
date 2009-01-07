@@ -1,0 +1,10 @@
+Copy file:
+	completion_php.py
+	completion_php.gedit-plugin
+	phpfunc.txt
+
+into:
+	~/.gnome2/gedit/plugins
+
+enable plugin:
+	Function completation for PHP code
