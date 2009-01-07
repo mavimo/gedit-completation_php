@@ -178,8 +178,6 @@ class CompletionPHPPlugin(gedit.Plugin):
         index = self._completion_windows[window].get_selected()
         # Insert into documente (at cursor position), selected text
         doc.insert_at_cursor(self._remains[index])
-        # Increse into favourites words counter array inserted word
-        words.add(self._completions[index])
         # terminate completation
         self._terminate_completion()
 
@@ -245,21 +243,33 @@ class CompletionPHPPlugin(gedit.Plugin):
             if word in self._completions: continue
             # add term into '_completions'
             self._completions.append(word)
+            # add remaning term
             self._remains.append(word[len(incomplete):])
             if len(self._remains) >= limit: break
 
     def _on_view_key_press_event(self, view, event, window):
         """Manage actions for completions and the completion window."""
 
+        # Check what do when key press
+        # CTRL
         if event.state & gtk.gdk.CONTROL_MASK:
             return self._terminate_completion()
+        # ALT
         if event.state & gtk.gdk.MOD1_MASK:
             return self._terminate_completion()
+        # TAB
         if (event.keyval == gtk.keysyms.Tab) and self._remains:
+#            self._terminate_completion()
+            return not self._complete_current()
+        # RETURN
+        if (event.keyval == gtk.keysyms.Return) and self._remains:
+#            self._terminate_completion()
             return not self._complete_current()
         completion_window = self._completion_windows[window]
+        # UP Arrow
         if (event.keyval == gtk.keysyms.Up) and self._remains:
             return not completion_window.select_previous()
+        # DOWN Arrow
         if (event.keyval == gtk.keysyms.Down) and self._remains:
             return not completion_window.select_next()
         string = unicode(event.string)
@@ -294,7 +304,6 @@ class CompletionPHPPlugin(gedit.Plugin):
 
         doc = tab.get_document()
         self._all_words.pop(doc, None)
-        self._favorite_words.pop(doc, None)
 
     def _scan_active_document(self, window):
         """Scan all the words in the active document in window."""
