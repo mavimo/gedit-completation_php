@@ -155,8 +155,7 @@ class CompletionPHPPlugin(gedit.Plugin):
     _re_non_alpha = re.compile(r"\W+", re.UNICODE | re.MULTILINE)
 
     # TODO: Are these sane defaults? Do we need a configuration dialog?
-    _scan_frequency = 1000000000000 # ms
-    _max_completions_to_show = 10
+    _max_completions_to_show = 10   # Number of autocomplete terma viable into popup
     _function_definition_file = "./phpfunc.txt" # File fith function autocomplete list
     _min_word_length = 3    # Min length of word before popup appair
 
@@ -251,10 +250,6 @@ class CompletionPHPPlugin(gedit.Plugin):
 
     def _on_view_key_press_event(self, view, event, window):
         """Manage actions for completions and the completion window."""
-
-        print view
-        print event
-        print window
 
         if event.state & gtk.gdk.CONTROL_MASK:
             return self._terminate_completion()
@@ -381,9 +376,6 @@ class CompletionPHPPlugin(gedit.Plugin):
         def scan(self, window):
             if not window.is_active(): return True
             return self._scan_active_document(window)
-        freq = self._scan_frequency
-        priority = gobject.PRIORITY_LOW
-        gobject.timeout_add(freq, scan, self, window, priority=priority)
 
     def deactivate(self, window):
         """Deactivate plugin."""
