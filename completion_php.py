@@ -157,13 +157,13 @@ class CompletionPHPPlugin(gedit.Plugin):
     # TODO: Are these sane defaults? Do we need a configuration dialog?
     _scan_frequency = 1000000000000 # ms
     _max_completions_to_show = 10
-    _function_definition_file = "/home/marco/Scrivania/phpfunc.txt"
+    _function_definition_file = "./phpfunc.txt" # File fith function autocomplete list
+    _min_word_length = 3    # Min length of word before popup appair
 
     def __init__(self):
         gedit.Plugin.__init__(self) # Init this plugin
         self._all_words = {}        # Hash with all aviable element aviable to display into popup
         self._completions = []      # Aviable element visible into popup
-#        self._favorite_words = {}   # Favourite element added
         self._remains = []          # Not displayed elements
         self._font_ascent = 0
         self._completion_windows = {}
@@ -179,8 +179,6 @@ class CompletionPHPPlugin(gedit.Plugin):
         index = self._completion_windows[window].get_selected()
         # Insert into documente (at cursor position), selected text
         doc.insert_at_cursor(self._remains[index])
-        # Set favourites words
-# MVM        words = self._favorite_words.setdefault(doc, set(()))
         # Increse into favourites words counter array inserted word
         words.add(self._completions[index])
         # terminate completation
@@ -226,11 +224,10 @@ class CompletionPHPPlugin(gedit.Plugin):
     def _find_completions(self, doc, incomplete):
         """Find completions for incomplete word and save them."""
 
+        if len(incomplete) < self._min_word_length: return True
         # Empty element array storage
         self._completions = []
         self._remains = []
-        # Load favourites words into temp variable
-#        favorites = self._favorite_words.get(doc, ())
         # Create empty array for words
         _all_words = set(())
         # Cycle every word into aviable words
@@ -239,11 +236,7 @@ class CompletionPHPPlugin(gedit.Plugin):
             _all_words.update(words)
         # Find limit of element to display
         limit = self._max_completions_to_show
-        # Find words ito favourites and all words, limit by 'limit'
-#        for sequence in (favorites, _all_words):
-#        for sequence in (_all_words):
-            # Cilye sequence of aviable words
-#            for word in sequence:
+        # Find words into 'all words', limit by 'limit'
         for word in _all_words:
             # check if not start with 'incomplete' text
             if not word.startswith(incomplete): continue
@@ -258,6 +251,10 @@ class CompletionPHPPlugin(gedit.Plugin):
 
     def _on_view_key_press_event(self, view, event, window):
         """Manage actions for completions and the completion window."""
+
+        print view
+        print event
+        print window
 
         if event.state & gtk.gdk.CONTROL_MASK:
             return self._terminate_completion()
