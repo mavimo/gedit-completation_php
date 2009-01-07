@@ -113,7 +113,7 @@ class CompletionPHPWindow(gtk.Window):
         self.resize(1, 1)
         self._store.clear()
         for word in completions:
-            self._store.append((word,))
+            self._store.append((word.split()[0],))
         self._view.columns_autosize()
         self._view.get_selection().select_path(0)
 
