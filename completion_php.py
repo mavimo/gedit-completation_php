@@ -163,7 +163,7 @@ class CompletionPHPPlugin(gedit.Plugin):
         gedit.Plugin.__init__(self) # Init this plugin
         self._all_words = {}        # Hash with all aviable element aviable to display into popup
         self._completions = []      # Aviable element visible into popup
-        self._favorite_words = {}   # Favourite element added
+#        self._favorite_words = {}   # Favourite element added
         self._remains = []          # Not displayed elements
         self._font_ascent = 0
         self._completion_windows = {}
@@ -180,7 +180,7 @@ class CompletionPHPPlugin(gedit.Plugin):
         # Insert into documente (at cursor position), selected text
         doc.insert_at_cursor(self._remains[index])
         # Set favourites words
-        words = self._favorite_words.setdefault(doc, set(()))
+# MVM        words = self._favorite_words.setdefault(doc, set(()))
         # Increse into favourites words counter array inserted word
         words.add(self._completions[index])
         # terminate completation
@@ -230,7 +230,7 @@ class CompletionPHPPlugin(gedit.Plugin):
         self._completions = []
         self._remains = []
         # Load favourites words into temp variable
-        favorites = self._favorite_words.get(doc, ())
+#        favorites = self._favorite_words.get(doc, ())
         # Create empty array for words
         _all_words = set(())
         # Cycle every word into aviable words
@@ -240,19 +240,21 @@ class CompletionPHPPlugin(gedit.Plugin):
         # Find limit of element to display
         limit = self._max_completions_to_show
         # Find words ito favourites and all words, limit by 'limit'
-        for sequence in (favorites, _all_words):
+#        for sequence in (favorites, _all_words):
+#        for sequence in (_all_words):
             # Cilye sequence of aviable words
-            for word in sequence:
-                # check if not start with 'incomplete' text
-                if not word.startswith(incomplete): continue
-                # Check if 'incomplete' is fulltext
-                if word == incomplete: continue
-                # check if term is already aviable into '_completions'
-                if word in self._completions: continue
-                # add term into '_completions'
-                self._completions.append(word)
-                self._remains.append(word[len(incomplete):])
-                if len(self._remains) >= limit: break
+#            for word in sequence:
+        for word in _all_words:
+            # check if not start with 'incomplete' text
+            if not word.startswith(incomplete): continue
+            # Check if 'incomplete' is fulltext
+            if word == incomplete: continue
+            # check if term is already aviable into '_completions'
+            if word in self._completions: continue
+            # add term into '_completions'
+            self._completions.append(word)
+            self._remains.append(word[len(incomplete):])
+            if len(self._remains) >= limit: break
 
     def _on_view_key_press_event(self, view, event, window):
         """Manage actions for completions and the completion window."""
@@ -319,6 +321,7 @@ class CompletionPHPPlugin(gedit.Plugin):
         in_file = open(self._function_definition_file,"r")
         text = in_file.read()
         in_file.close()
+
         # Add aviable function into hash
         self._all_words[doc] = frozenset(text.splitlines())
 
