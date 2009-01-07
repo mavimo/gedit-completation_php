@@ -6,5 +6,5 @@ Copy file:
 into:
 	~/.gnome2/gedit/plugins
 
-enable plugin:
+and after reload gedit and enable plugin:
 	Function completation for PHP code
