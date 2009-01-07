@@ -1,0 +1,9 @@
+[Gedit Plugin]
+Loader=python
+Module=completion_php
+IAge=2
+Name=Function completation for PHP code
+Description=Complete code, using PHP function, with the tab key
+Authors=Marco Vito Moscaritolo <mavimo@gmail.com>
+Copyright=Copyright (C) 2008 Marco Vito Moscaritolo
+Website=http://mavimo.org
