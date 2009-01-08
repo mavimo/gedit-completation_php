@@ -122,6 +122,57 @@ class CompletionPHPWindow(gtk.Window):
 
         self._view.modify_font(font_desc)
 
+
+
+
+class CompletionPHPConfigWindow(gtk.Window):
+
+    def __init__(self):
+        gtk.Window.__init__(self, gtk.WINDOW_TOPLEVEL)
+        self._init_interface()
+
+    def _init_interface(self):
+        self.set_size_request(500, 100)
+        self.set_title("Configure autocompletation")
+
+        table = gtk.Table(rows=4, columns=2, homogeneous=True)
+        self.add(table)
+        table.show()
+
+        label = gtk.Label("Numero di elementi visualizzati")
+        label.set_justify(gtk.JUSTIFY_LEFT)
+        label.show()
+        table.attach(label, 0, 1, 0, 1, xoptions=gtk.FILL)
+
+        entry = gtk.Entry(max=0)
+        entry.show()
+        table.attach(entry, 1, 2, 0, 1)
+
+        label = gtk.Label("Numero di caratteri minimo")
+        label.set_justify(gtk.JUSTIFY_LEFT)
+        label.show()
+        table.attach(label, 0, 1, 1, 2, xoptions=gtk.FILL)
+
+
+        self.entry_numchar = gtk.Entry(max=0)
+        self.entry_numchar.show()
+        table.attach(self.entry_numchar, 1, 2, 1, 2)
+
+        label = gtk.Label("File con le funzioni")
+        label.set_justify(gtk.JUSTIFY_LEFT)
+        label.show()
+        table.attach(label, 0, 1, 2, 3, xoptions=gtk.FILL)
+
+        self.entry_file = gtk.Entry(max=0)
+        self.entry_file.show()
+        table.attach(self.entry_file, 1, 2, 2, 3)
+
+        button = gtk.Button(stock=gtk.STOCK_SAVE)
+        button.show()
+        table.attach(button, 0, 2, 3, 4)
+
+        self.show()
+
 class CompletionPHPPlugin(gedit.Plugin):
 
     """Complete words with the tab key.
@@ -169,6 +220,18 @@ class CompletionPHPPlugin(gedit.Plugin):
         self._remains = []          # Not displayed elements
         self._font_ascent = 0
         self._completion_windows = {}
+
+    # Add configuration windows
+    def is_configurable(self):
+        return True
+
+    # Generate configuration windows
+    def create_configure_dialog(self):
+        # Create a new window ==================================================
+        window = CompletionPHPConfigWindow()
+
+        # Return window
+        return window
 
     def _complete_current(self):
         """Complete the current word."""
